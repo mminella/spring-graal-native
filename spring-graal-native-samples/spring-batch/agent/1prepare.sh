@@ -2,7 +2,7 @@ cd ..
 mvn clean package
 cd agent
 rm -rf unpack
-unzip ../target/commandlinerunner-0.0.1-SNAPSHOT.jar -d unpack
+unzip ../target/spring-batch-0.0.1-SNAPSHOT.jar -d unpack
 cd unpack/BOOT-INF/classes
 cp -R ../../META-INF .
 rm -rf graal

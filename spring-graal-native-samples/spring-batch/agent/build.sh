@@ -16,6 +16,6 @@
 
 # The test script will look for it in the current folder
 cp ../../../verify.sh .
-${PWD%/*samples/*}/scripts/test.sh commandlinerunner-agent .
+${PWD%/*samples/*}/scripts/test.sh spring-batch-agent .
 mkdir -p ../../../target/native-image/
 mv summary.csv ../../../target/native-image/

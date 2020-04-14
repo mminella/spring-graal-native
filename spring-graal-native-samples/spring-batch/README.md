@@ -1,1 +1,1 @@
-Very basic spring boot project using a CommandLineRunner bean.
+Very basic spring boot project using Spring Batch.

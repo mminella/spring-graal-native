@@ -1,4 +1,4 @@
-# Commandlinerunner with agent
+# Spring Batch with agent
 
 There is a `build.sh` script that will run all these steps automatically, but this gives a breakdown of what
 `.build.sh` actually does:
@@ -14,4 +14,4 @@ and populate the json files in `graal/META-INF/native-image` (under `unpack/BOOT
 
 - Runs `../../../5compile.sh` to compile the application to a native-image called `commandlinerunner`
 
-- Runs the `test.sh` script to test `commandlinerunner` and produce stats in a `summary.csv` file
+- Runs the `test.sh` script to test `spring-batch` and produce stats in a `summary.csv` file

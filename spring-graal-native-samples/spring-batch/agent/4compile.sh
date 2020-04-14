@@ -4,6 +4,6 @@ native-image \
   --no-fallback \
   -H:+TraceClassInitialization \
   -H:+ReportExceptionStackTraces \
-  -H:Name=commandlinerunner-agent \
+  -H:Name=spring-batch-agent \
   -cp .:$CP:graal:../../../../../../spring-graal-native/target/spring-graal-native-0.7.0.BUILD-SNAPSHOT.jar \
-  com.example.commandlinerunner.CommandlinerunnerApplication 2>&1 | tee output.txt
+  com.example.batch.BatchConfiguration 2>&1 | tee output.txt
