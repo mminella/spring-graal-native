@@ -34,3 +34,4 @@ org.springframework.security.config.annotation.web.reactive.Hints
 org.springframework.stereotype.Hints
 org.springframework.transaction.annotation.Hints
 org.springframework.web.bind.annotation.Hints
+org.springframework.batch.Hints

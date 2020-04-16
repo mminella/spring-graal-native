@@ -35,12 +35,16 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.oracle.svm.core.configure.ResourcesRegistry;
+import com.oracle.svm.core.jdk.Resources;
+import com.oracle.svm.hosted.FeatureImpl.BeforeAnalysisAccessImpl;
+import com.oracle.svm.hosted.ImageClassLoader;
 import org.graalvm.nativeimage.ImageSingletons;
 import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess;
+
 import org.springframework.graal.domain.reflect.Flag;
 import org.springframework.graal.domain.resources.ResourcesDescriptor;
 import org.springframework.graal.domain.resources.ResourcesJsonMarshaller;
@@ -51,11 +55,6 @@ import org.springframework.graal.type.Method;
 import org.springframework.graal.type.MissingTypeException;
 import org.springframework.graal.type.Type;
 import org.springframework.graal.type.TypeSystem;
-
-import com.oracle.svm.core.configure.ResourcesRegistry;
-import com.oracle.svm.core.jdk.Resources;
-import com.oracle.svm.hosted.FeatureImpl.BeforeAnalysisAccessImpl;
-import com.oracle.svm.hosted.ImageClassLoader;
 
 public class ResourcesHandler {
 	
@@ -244,13 +243,20 @@ public class ResourcesHandler {
 				// SBG: ERROR: CANNOT RESOLVE org.springframework.samples.petclinic.model ???
 				// for petclinic spring.components
 			}
-		Type kType = ts.resolveDotted(k);
-		if (kType!=null && kType.isAtRepository()) { // See JpaVisitRepositoryImpl in petclinic sample
-			processRepository2(kType);
-		}
-		if (kType != null && kType.isAtResponseBody()) {
-			processResponseBodyComponent(kType);
-		}
+
+			Type kType = ts.resolveDotted(k);
+			if (kType!=null && kType.isAtRepository()) { // See JpaVisitRepositoryImpl in petclinic sample
+				processRepository2(kType);
+			}
+
+			if (kType != null && kType.isAtResponseBody()) {
+				processResponseBodyComponent(kType);
+			}
+
+			if(kType!=null && kType.isAtEnableBatchProcessing()) {
+				processBatchProcessing(kType);
+			}
+
 			StringTokenizer st = new StringTokenizer(vs, ",");
 			// org.springframework.samples.petclinic.visit.JpaVisitRepositoryImpl=org.springframework.stereotype.Component,javax.transaction.Transactional
 			while (st.hasMoreElements()) {
@@ -312,6 +318,57 @@ public class ResourcesHandler {
 		repositoryInterfaces.add("org.springframework.aop.framework.Advised");
 		repositoryInterfaces.add("org.springframework.core.DecoratingProxy");
 		dynamicProxiesHandler.addProxy(repositoryInterfaces);
+	}
+
+	private void processBatchProcessing(Type r) {
+
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+
+		System.out.println(">> Type : " + r);
+		processComponent(r);
+
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+		System.out.println(">>> PROCESSING @EnableBatchProcessing!!!!");
+	}
+
+	private void processComponent(Type r) {
+		System.out.println(">> PROCESSING COMPONENT: " + r.getName());
+		System.out.println(">> PROCESSING COMPONENT: " + r.getName());
+		System.out.println(">> PROCESSING COMPONENT: " + r.getName());
+		Map<String, List<String>> imports = r.findImports();
+		System.out.println(">> Imports: " + imports);
+
+		if (imports != null) {
+			System.out.println("Imports found on "+r.getName()+" are "+imports);
+			for (Entry<String,List<String>> importsEntry: imports.entrySet()) {
+				System.out.println(">> enabling reflection for " + importsEntry.getKey());
+				reflectionHandler.addAccess(importsEntry.getKey(), Flag.allDeclaredConstructors, Flag.allDeclaredMethods);
+				for (String imported: importsEntry.getValue()) {
+					System.out.println(">> processing imported: " + imported);
+					String importedName = fromLtoDotted(imported);
+					System.out.println(">> importedName: " + importedName);
+					reflectionHandler.addAccess(importedName, Flag.allDeclaredConstructors, Flag.allDeclaredMethods);
+					processComponent(ts.resolveDotted(importedName));
+				}
+			}
+		}
+	}
+
+	String fromLtoDotted(String lDescriptor) {
+		return lDescriptor.substring(1,lDescriptor.length()-1).replace("/", ".");
 	}
 
 	/**

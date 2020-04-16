@@ -61,6 +61,7 @@ public class Type {
 	public final static String AtRepository = "Lorg/springframework/stereotype/Repository;";
 	public final static String AtEnableConfigurationProperties = "Lorg/springframework/boot/context/properties/EnableConfigurationProperties;";
 	public final static String AtImports = "Lorg/springframework/context/annotation/Import;";
+	public final static String AtEnableBatchProcessing = "Lorg/springframework/batch/core/configuration/annotation/EnableBatchProcessing;";
 	public final static String ImportBeanDefinitionRegistrar = "Lorg/springframework/context/annotation/ImportBeanDefinitionRegistrar;";
 	public final static String ImportSelector = "Lorg/springframework/context/annotation/ImportSelector;";
 	public final static String Condition = "Lorg/springframework/context/annotation/Condition;";
@@ -1561,6 +1562,10 @@ public class Type {
 
 	public boolean isAtRepository() {
 		return isAnnotated(AtRepository);
+	}
+
+	public boolean isAtEnableBatchProcessing() {
+		return isAnnotated(AtEnableBatchProcessing);
 	}
 
 	public boolean isAtResponseBody() {
