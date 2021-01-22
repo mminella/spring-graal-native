@@ -104,6 +104,8 @@ public class Type {
 	public final static String AtPostFilter = "Lorg/springframework/security/access/prepost/PostFilter;";
 	public final static String AtPreAuthorize = "Lorg/springframework/security/access/prepost/PreAuthorize;";
 	public final static String AtPreFilter = "Lorg/springframework/security/access/prepost/PreFilter;";
+	public final static String AtStepScope = "Lorg/springframework/batch/core/configuration/annotation/StepScope;";
+	public final static String AtJobScope = "Lorg/springframework/batch/core/configuration/annotation/JobScope;";
 
 	public final static Type MISSING = new Type(null, null, 0);
 
@@ -2105,6 +2107,23 @@ public class Type {
 
 	public boolean isArray() {
 		return dimensions > 0;
+	}
+
+	public boolean isBatchScoped() {
+		return isAnnotated(AtStepScope) || isAnnotated(AtJobScope);
+	}
+
+	public boolean hasBatchScopedMethods() {
+		// TODO meta annotation usage?
+		List<Method> methodsWithStepScope = getMethodsWithAnnotation(AtStepScope);
+		if (methodsWithStepScope.size() > 0) {
+			return true;
+		}
+		List<Method> methodsWithJobScope = getMethodsWithAnnotation(AtJobScope);
+		if (methodsWithJobScope.size() > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

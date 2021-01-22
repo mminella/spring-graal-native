@@ -15,10 +15,12 @@
  */
 package org.springframework.batch.core.configuration.annotation;
 
+import org.springframework.aop.scope.ScopedProxyFactoryBean;
 import org.springframework.boot.autoconfigure.batch.BasicBatchConfigurer;
 import org.springframework.boot.autoconfigure.batch.JobLauncherApplicationRunner;
 import org.springframework.boot.jdbc.AbstractDataSourceInitializer;
 import org.springframework.boot.jdbc.metadata.DataSourcePoolMetadataProvider;
+import org.springframework.context.annotation.Scope;
 import org.springframework.nativex.extension.NativeImageConfiguration;
 import org.springframework.nativex.extension.NativeImageHint;
 import org.springframework.nativex.extension.ProxyInfo;
@@ -33,6 +35,8 @@ import org.springframework.nativex.type.AccessBits;
 			}),
 		},
 		typeInfos = {
+		@TypeInfo(types = {Scope.class, ScopedProxyFactoryBean.class},
+		access = AccessBits.LOAD_AND_CONSTRUCT_AND_PUBLIC_METHODS),
 		@TypeInfo(types = {
 			AbstractDataSourceInitializer.class,
 		}, access=AccessBits.LOAD_AND_CONSTRUCT|AccessBits.DECLARED_METHODS),
