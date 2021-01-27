@@ -75,6 +75,13 @@ import org.springframework.nativex.type.AccessBits;
 				"org.springframework.aop.framework.Advised",
 				"org.springframework.core.DecoratingProxy"}),
 		@ProxyInfo(typeNames = {
+				"org.springframework.aop.scope.ScopedObject",
+				"java.io.Serializable",
+				"org.springframework.aop.framework.AopInfrastructureBean",
+				"org.springframework.aop.SpringProxy",
+				"org.springframework.aop.framework.Advised",
+				"org.springframework.core.DecoratingProxy"}),
+		@ProxyInfo(typeNames = {
 				"java.util.concurrent.ConcurrentMap", 
 				"java.io.Serializable",
 				"java.util.Map",

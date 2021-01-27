@@ -67,7 +67,7 @@ public class BatchScopeComponentProcessor implements ComponentProcessor {
 			System.out.println("\t==================================================================");
 			List<Type> annotationTypes = method.getAnnotationTypes();
 
-			
+
 			for (Type annotationType : annotationTypes) {
 				System.out.println("\t>> is method batch scoped? ");
 				if(annotationType.getDescriptor().equals(Type.AtJobScope) ||
@@ -77,12 +77,8 @@ public class BatchScopeComponentProcessor implements ComponentProcessor {
 					Type returnType = method.getReturnType();
 					System.out.println("\t>> returnType = " + returnType);
 
-//					imageContext.addProxy(returnType.getDottedName(), "org.springframework.aop.SpringProxy", "org.springframework.aop.framework.Advised", "org.springframework.core.DecoratingProxy");
-
 
 					List<String> returnTypeScopedInterfaces = new ArrayList<>();
-
-					returnTypeScopedInterfaces.add(returnType.getDottedName());
 
 					if(returnType != null && returnType.getInterfaces() != null) {
 
