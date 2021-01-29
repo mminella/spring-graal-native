@@ -18,6 +18,7 @@ package com.example.batch.configuration;
 
 import javax.sql.DataSource;
 
+import com.example.batch.ItemReaderListener;
 import com.example.batch.domain.Person;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,18 +30,13 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Michael Minella
@@ -66,15 +62,15 @@ public class BatchConfiguration {
 
 	@StepScope
 	@Bean
-	public FlatFileItemReader<Person> reader(@Value("#{jobParameters['input']}") Resource inputFile) {
-		return new FlatFileItemReaderBuilder<Person>()
-				.name("itemReader")
-				.resource(inputFile)
-				.delimited()
-				.names("firstName", "lastName")
-				.targetType(Person.class)
-				.build();
+	// We advice users to return the concrete implementation for use cases like this where a bean is Step or Job scoped
+	// and implement multiple interfaces.
+	public ItemReaderListener reader() {
+//	public ItemStreamReader<Person> reader() {
 
+		ItemReaderListener itemReaderListener = new ItemReaderListener();
+		itemReaderListener.setName("reader");
+
+		return itemReaderListener;
 	}
 
 	@JobScope
@@ -93,12 +89,15 @@ public class BatchConfiguration {
 	}
 
 	@Bean
-	public Step step1(ItemReader<Person> itemReader, ItemProcessor<Person, Person> itemProcessor, ItemWriter<Person> itemWriter) {
+	public Step step1(ItemReaderListener itemReader,
+			ItemProcessor<Person, Person> itemProcessor,
+			ItemWriter<Person> itemWriter) {
 		return this.stepBuilderFactory.get("step1")
 				.<Person, Person>chunk(2)
 				.reader(itemReader)
 				.processor(itemProcessor)
 				.writer(itemWriter)
+				.listener(itemReader)
 				.build();
 	}
 

@@ -82,6 +82,10 @@ public class BatchScopeComponentProcessor implements ComponentProcessor {
 
 					if(returnType != null && returnType.getInterfaces() != null) {
 
+						if(returnType.isInterface()) {
+							returnTypeScopedInterfaces.add(returnType.getDottedName());
+						}
+
 						addInterfaces(returnType, returnTypeScopedInterfaces);
 					}
 
