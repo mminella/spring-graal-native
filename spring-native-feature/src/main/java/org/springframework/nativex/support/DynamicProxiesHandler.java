@@ -48,6 +48,7 @@ public class DynamicProxiesHandler extends Handler {
 		System.out.println("Attempting proxy registration of #"+pd.getProxyDescriptors().size()+" proxies");
 		int skipped = 0;
 		for (ProxyDescriptor proxyDescriptor : pd.getProxyDescriptors()) {
+			System.out.println(">> Registering proxy : " + proxyDescriptor.getInterfaces().get(0));
 			if (!collector.addProxy(proxyDescriptor.getInterfaces(), true)) {
 				skipped++;
 			}
@@ -62,6 +63,7 @@ public class DynamicProxiesHandler extends Handler {
 	}
 
 	public boolean addProxy(List<String> interfaceNames) {
+		System.out.println(">> DynamicProxiesHandler#addProxy(List<String>)");
 		return collector.addProxy(interfaceNames, true);
 	}
 }

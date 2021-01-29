@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,7 +42,6 @@ import java.util.stream.Stream;
 
 import org.springframework.nativex.domain.init.InitializationDescriptor;
 import org.springframework.nativex.domain.reflect.Flag;
-import org.springframework.nativex.domain.reflect.JsonMarshaller;
 import org.springframework.nativex.domain.reflect.MethodDescriptor;
 import org.springframework.nativex.domain.reflect.ReflectionDescriptor;
 import org.springframework.nativex.domain.resources.ResourcesDescriptor;
@@ -53,8 +51,8 @@ import org.springframework.nativex.extension.NativeImageContext;
 import org.springframework.nativex.extension.SpringFactoriesProcessor;
 import org.springframework.nativex.type.AccessBits;
 import org.springframework.nativex.type.AccessDescriptor;
-import org.springframework.nativex.type.HintDeclaration;
 import org.springframework.nativex.type.HintApplication;
+import org.springframework.nativex.type.HintDeclaration;
 import org.springframework.nativex.type.Method;
 import org.springframework.nativex.type.MissingTypeException;
 import org.springframework.nativex.type.ProxyDescriptor;
@@ -234,6 +232,7 @@ public class ResourcesHandler extends Handler {
 				} else if (ConfigOptions.isFunctionalMode()) {
 					processSpringComponentsFunc(p, context, alreadyProcessed);
 				} else {
+					System.out.println(">> ResourceHandler#handleSpringComponents()");
 					processSpringComponents(p, context, alreadyProcessed);
 				}
 			}
@@ -474,6 +473,7 @@ public class ResourcesHandler extends Handler {
 		}
 		for (ComponentProcessor componentProcessor: componentProcessors) {
 			if (componentProcessor.handle(context, componentTypename, values)) {
+				System.out.println(">> About to call process for " + componentProcessor.toString());
 				componentProcessor.process(context, componentTypename, values);
 			}
 		}	
@@ -489,12 +489,14 @@ public class ResourcesHandler extends Handler {
 
 		@Override
 		public boolean addProxy(List<String> interfaces) {
+			System.out.println(">> NativeImageContextImpl#addProxy(List<String>)");
 			dynamicProxiesHandler.addProxy(interfaces);
 			return true;
 		}
 
 		@Override
 		public boolean addProxy(String... interfaces) {
+			System.out.println(">> NativeImageContextImpl#addProxy(String...)");
 			if (interfaces != null) {
 				dynamicProxiesHandler.addProxy(Arrays.asList(interfaces));
 			}

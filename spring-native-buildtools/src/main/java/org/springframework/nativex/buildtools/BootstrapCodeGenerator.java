@@ -60,8 +60,11 @@ public class BootstrapCodeGenerator {
 		}
 		// proxy-config.json
 		ProxiesDescriptor proxiesDescriptor = buildContext.getProxiesDescriptor();
+		System.out.println(">> proxy-config.json");
 		if (!proxiesDescriptor.isEmpty()) {
+			System.out.println(">> descriptor not empty");
 			Path proxiesConfigPath = resourcesPath.resolve(Paths.get("proxy-config.json"));
+			System.out.println(">> path to file = " + proxiesConfigPath.toString());
 			ProxiesDescriptorJsonMarshaller proxiesMarshaller = new ProxiesDescriptorJsonMarshaller();
 			proxiesMarshaller.write(proxiesDescriptor, Files.newOutputStream(proxiesConfigPath));
 		}

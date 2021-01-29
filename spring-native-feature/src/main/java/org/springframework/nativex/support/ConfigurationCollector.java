@@ -38,7 +38,6 @@ import org.springframework.nativex.domain.reflect.MethodDescriptor;
 import org.springframework.nativex.domain.reflect.ReflectionDescriptor;
 import org.springframework.nativex.domain.resources.ResourcesDescriptor;
 import org.springframework.nativex.domain.resources.ResourcesJsonMarshaller;
-import org.springframework.nativex.type.AccessBits;
 import org.springframework.nativex.type.Type;
 import org.springframework.nativex.type.TypeSystem;
 
@@ -98,14 +97,25 @@ public class ConfigurationCollector {
 	}
 
 	public boolean addProxy(List<String> interfaceNames, boolean verify) {
+		System.out.println(">> ConfigurationCollector#addProxy(List<String>, boolean)");
 		if (verify) {
 			if (!checkTypes(interfaceNames, t -> t!=null && t.isInterface())) {
+				System.out.println(">> Returning false for verification of interfaces: ");
+				for (String interfaceName : interfaceNames) {
+					System.out.println("\t" + interfaceName);
+				}
 				return false;
 			}
 		}
+		System.out.println(">> graalVMConnector = " + graalVMConnector);
 		if (graalVMConnector!=null) {
 			graalVMConnector.addProxy(interfaceNames);
 		}
+		System.out.println(">> adding to proxiesDescriptor the following interfaces");
+		for (String interfaceName : interfaceNames) {
+			System.out.println("\t" + interfaceName);
+		}
+
 		proxiesDescriptor.add(ProxyDescriptor.of(interfaceNames));
 		return true;
 	}
